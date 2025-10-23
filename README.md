@@ -43,3 +43,13 @@ This isolates Vite internals from the dep optimizer, preventing its CSS chunk fr
 ## Notes
 
 This repro includes a minimal wrangler.toml (main=src/worker.tsx) to satisfy rwsdk's plugin which reads wrangler config to locate the worker entry.
+
+## Why the Worker Vite environment
+
+This repro sets the Cloudflare plugin to use the `worker` Vite environment so SSR runs in a Workers‑style runtime (not Node). This is important because:
+
+- It aligns SSR with Cloudflare’s `workerd` semantics instead of Node’s, avoiding Node built‑ins like `node:fs`, `node:path`, etc.
+- It switches resolve conditions to include `['workerd', 'worker', 'edge']`, so packages with conditional exports choose the correct entries.
+- It exposes realistic runtime behavior for WASM loading and polyfills in dev via the plugin’s HMR/miniflare wiring.
+
+Without `viteEnvironment: { name: 'worker' }`, Vite would default to Node SSR, and you may see unrelated Node‑specific resolution errors instead of the lightningcss optimizer issue demonstrated here.
