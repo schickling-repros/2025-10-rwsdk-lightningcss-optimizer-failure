@@ -1,0 +1,3 @@
+/* Force CSS pipeline to run so Vite's CSS plugin is active */
+:root { --color: #333; }
+body { color: var(--color); }
