@@ -1,0 +1,3 @@
+name = "rwsdk-lightningcss-repro"
+main = "src/worker.tsx"
+compatibility_date = "2025-01-01"
